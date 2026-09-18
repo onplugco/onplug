@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A0A0A">
+<title>Instant Roof Quote Tool — OnPlug</title>
+<meta name="description" content="See how an instant, satellite-based roof quote tool works — draw the roof, pick a tier, get a price. Built by OnPlug for roofing and solar companies.">
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="icon" href="./favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.4.3/mapbox-gl-draw.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.4.3/mapbox-gl-draw.css">
+<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+
+<link href="./quote-page.css" rel="stylesheet">
+<link href="./roof-estimator.css" rel="stylesheet">
+</head>
+<body>
+<div class="glow glow-lime"></div>
+<div class="glow glow-blue"></div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="https://onplug.co" class="logo">
+      <img src="./images/onplug-logo.png" alt="OnPlug">
+    </a>
+    <div class="header-actions">
+      <span class="tag-pill">Live Demo</span>
+      <a href="https://onplug.co/#contact" class="btn-primary">
+        Book a Call
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">Free Quote Tool</span>
+      <h1>Get Your <em>Free</em> Instant Roof Quote</h1>
+      <p>Enter an address and get an accurate roof estimate in seconds — no phone call required, no obligation, completely free.</p>
+    </div>
+  </section>
+
+  <section class="tool-section">
+    <div class="container tool-grid">
+      <div class="info-stack">
+        <div class="info-card">
+          <div class="head">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            See your roof from space
+          </div>
+          <p>We pull satellite imagery for the address and automatically outline every roof section on the property, no site visit needed.</p>
+        </div>
+        <div class="info-card">
+          <div class="head">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            A real number in under 2 minutes
+          </div>
+          <p>Homeowners get good / better / best pricing instantly, so they can compare options before you ever pick up the phone.</p>
+        </div>
+        <div class="info-card">
+          <h3>What homeowners get</h3>
+          <ul>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+              Line-item pricing by material &amp; labor
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+              Three shingle-tier options (good / better / best)
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+              Financing pre-qualification (soft pull only)
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+              Instantly captured as a booked lead for you
+            </li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="head">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+            We never sell your info
+          </div>
+          <p>Every address and detail entered here is used only to prepare the quote, nothing more.</p>
+        </div>
+      </div>
+
+      <div class="tool-sticky">
+        <div id="psr-roof-estimator">
+          <div class="psr-card">
+            <div class="psr-progress" id="psrProgressBar">
+              <div class="psr-step active" data-step="1"><div class="dot">1</div><div class="lbl">Address</div></div>
+              <div class="psr-step" data-step="2"><div class="dot">2</div><div class="lbl">Confirm Roof</div></div>
+              <div class="psr-step" data-step="3"><div class="dot">3</div><div class="lbl">Your Info</div></div>
+              <div class="psr-step" data-step="4"><div class="dot">4</div><div class="lbl">Your Quote</div></div>
+            </div>
+
+            <div class="psr-panel-body">
+
+              <div class="psr-step-view active" data-step="1">
+                <div class="psr-step-head">
+                  <div class="psr-kicker">Step 01</div>
+                  <h3>Enter a project address</h3>
+                  <p>We pull satellite imagery and automatically outline every roof structure on the property.</p>
+                </div>
+                <div class="psr-field">
+                  <label for="psrAddressInput">Property address</label>
+                  <input autocomplete="off" id="psrAddressInput" placeholder="123 Main St, Austin, TX" type="text">
+                  <div class="psr-suggest-list" id="psrSuggestList"></div>
+                </div>
+                <div class="psr-helper-err" id="psrAddressErr">We couldn't find that address — try adding city and state.</div>
+                <div class="psr-btn-row">
+                  <button class="psr-btn psr-btn-primary psr-btn-block" id="psrFindRoofBtn" type="button">Find My Roof</button>
+                </div>
+              </div>
+
+              <div class="psr-step-view" data-step="2">
+                <div class="psr-step-head">
+                  <div class="psr-kicker">Step 02</div>
+                  <h3>Confirm the roof</h3>
+                  <p>Toggle sections on/off, drag corners to adjust, or draw a new section.</p>
+                </div>
+                <div class="psr-trace-layout">
+                  <div>
+                    <div class="psr-map-shell">
+                      <div id="psr-map"></div>
+                      <div class="psr-map-overlay">
+                        <div class="psr-map-badge" id="psrMapBadge">Drag corners to fine-tune · click + to draw another section</div>
+                        <div class="psr-map-tools">
+                          <button id="psrDrawBtn" title="Draw new roof section" type="button">+</button>
+                          <button id="psrDeleteBtn" title="Delete selected section" type="button">×</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="psr-btn-row">
+                      <button class="psr-btn psr-btn-ghost" id="psrRedetectBtn" type="button">Re-detect Roofs</button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="psr-hud">
+                      <div class="psr-hud-label">Total Roof Area</div>
+                      <div class="psr-hud-value" id="psrTotalAreaDisplay">0 <small>sq ft</small></div>
+                      <div class="psr-divider"></div>
+                      <div class="psr-hud-label">Detected Sections</div>
+                      <div class="psr-section-list" id="psrSectionList"></div>
+                    </div>
+                    <div class="psr-hud" style="margin-top:12px;">
+                      <div class="psr-hud-label" style="margin-bottom:8px;">Approximate Roof Pitch</div>
+                      <div class="psr-pitch-grid" id="psrPitchGrid"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="psr-btn-row">
+                  <button class="psr-btn psr-btn-ghost" id="psrBackTo1Btn" type="button">Back</button>
+                  <button class="psr-btn psr-btn-primary" disabled id="psrToStep3Btn" type="button">See My Price</button>
+                </div>
+              </div>
+
+              <div class="psr-step-view" data-step="3">
+                <div class="psr-step-head">
+                  <div class="psr-kicker">Step 03</div>
+                  <h3>Where should we send the quote?</h3>
+                  <p>Takes 10 seconds — no spam, ever.</p>
+                </div>
+                <div class="psr-field">
+                  <label for="psrNameInput">Full name</label>
+                  <input id="psrNameInput" placeholder="Jane Homeowner" type="text">
+                </div>
+                <div class="psr-field-row">
+                  <div class="psr-field">
+                    <label for="psrEmailInput">Email</label>
+                    <input id="psrEmailInput" placeholder="jane@email.com" type="email">
+                  </div>
+                  <div class="psr-field">
+                    <label for="psrPhoneInput">Phone</label>
+                    <input id="psrPhoneInput" placeholder="(555) 123-4567" type="tel">
+                  </div>
+                </div>
+                <div class="psr-helper-err" id="psrContactErr">Please fill in your name, email, and phone.</div>
+                <div class="psr-btn-row">
+                  <button class="psr-btn psr-btn-ghost" id="psrBackTo2Btn" type="button">Back</button>
+                  <button class="psr-btn psr-btn-primary" id="psrToStep4Btn" type="button">See My Quote</button>
+                </div>
+              </div>
+
+              <div class="psr-step-view" data-step="4">
+                <div class="psr-step-head">
+                  <div class="psr-kicker">Step 04</div>
+                  <h3>Your instant quote</h3>
+                  <p>Based on the roof measurement — click any option to request that estimate.</p>
+                </div>
+                <div class="psr-quote-address" id="psrQuoteAddress"></div>
+                <div class="psr-tiers" id="psrTiersContainer"></div>
+                <div id="psrConfirmScreen" style="display:none;">
+                  <div class="psr-confirm-screen">
+                    <div class="icon">✓</div>
+                    <h4>This quote request is on its way</h4>
+                    <p>In a live deployment, your team would follow up here to confirm details and schedule the free on-site inspection.</p>
+                    <div class="psr-btn-row" style="justify-content:center;margin-top:22px;">
+                      <a class="psr-btn psr-btn-primary" href="https://onplug.co/#contact">Book a Call With OnPlug</a>
+                      <button class="psr-btn psr-btn-ghost" id="psrStartOverBtn" type="button">Start a New Quote</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <p style="margin-top:16px;text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Prefer to talk? <a href="https://onplug.co/#contact" style="color:#D4FF00;">Book a call with OnPlug</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <img src="./images/onplug-logo.png" alt="OnPlug">
+    <p class="footer-copy">&copy; <span id="year"></span> Onplug. All rights reserved. — Demo tool, built to show what OnPlug can build for your business.</p>
+    <div class="footer-right">
+      <div class="footer-social">
+        <a href="https://facebook.com/onplugcoph" target="_blank" rel="noopener noreferrer" aria-label="OnPlug on Facebook">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+        </a>
+        <a href="https://www.instagram.com/onplugcoph" target="_blank" rel="noopener noreferrer" aria-label="OnPlug on Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+        </a>
+        <a href="https://www.linkedin.com/company/synergistus" target="_blank" rel="noopener noreferrer" aria-label="OnPlug on LinkedIn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<script src="./roof-estimator.js"></script>
+</body>
+</html>
